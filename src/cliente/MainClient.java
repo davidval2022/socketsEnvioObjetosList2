@@ -25,6 +25,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Empleado;
+import model.Usuarios;
 //import model.Persona;
 
 
@@ -57,9 +58,9 @@ public class MainClient {
             }else{
                 //leemos la respuesta, nos enviará un codigo 
                 mensajeServer = lector.readLine();   //leemos ya la respuesta del server,    nos envia un código     
-                System.out.println(mensajeServer);//vemos el código
-                if(mensajeServer.equalsIgnoreCase("00 - Hay un error en el login.. desconectado")){
-                    System.out.println("El login es erroneo");//vemos el código
+                //System.out.println(mensajeServer);//vemos el código
+                if(mensajeServer.equalsIgnoreCase("-1")){
+                    System.out.println("Codigo = -1 .El login es erroneo");//vemos el código
                     salir = true;
                     lector.close();
                     escriptor.close();
@@ -68,11 +69,18 @@ public class MainClient {
                 }else{
                     codigo = mensajeServer;
                     while(!salir){
-                        //mensajeServer = lector.readLine();   //leemos ya la respuesta del server,    nos envia un código     
-                        //System.out.println(mensajeServer);//vemos el código
+            
+                        System.out.println(mensajeServer);//vemos el código
                         //a partir de ahora ya enviamos el nombre del Empleado que queremos
-                        System.out.println("Ahora escribe el nombre del Empleado a buscar (NOTA: este mensaje es del cliente, no esta escrito por el server.. es por diferenciar.\n"
-                                + "El último mensaje del server ha sido el código.. pero eso significa que todo está correcto )");//vemos el código
+                        System.out.println("El server a respondido ok y nos a asignado el código mostrado arriba)");//vemos el código
+                        System.out.println("Habrá que enviar a partir de ahora una serie de codigos separados por ':')");//vemos el código
+                        System.out.println("codigoDadoPorElServer|||nombreTabla|||nombreColumna|||Filtro|||Orden)");//vemos el código
+                        System.out.println("nombreColumna,Filtro y Orden son optativos, pero hay que poner al menos un 0 en cada uno.");//vemos el código
+                        if(codigo.charAt(0) == 'A'){
+                            System.out.println("El server indica que eres administrador");
+                        }else if(codigo.charAt(0) == 'U'){
+                            System.out.println("El server indica que eres usuario normal");
+                        }
                         palabra = lectorPalabra.next();
                         lectorPalabra.nextLine();
                         //ahora escribimos en servidor , enviandole la palabra a buscar 
@@ -85,23 +93,44 @@ public class MainClient {
                             escriptor.close();
                             socket.close();
                         }else{
-                            List<Empleado> listaPersonas = new ArrayList<>();
-                            ObjectInputStream perEnt = new ObjectInputStream(socket.getInputStream());
-                            listaPersonas = (ArrayList) perEnt.readObject();;
-                            //recibo objeto
-                            for(int i =0; i< listaPersonas.size();i++){
-                                System.out.println("Nombre: " + listaPersonas.get(i).getNom() + " Apellidos: " + listaPersonas.get(i).getApellidos() + " DNI: "+listaPersonas.get(i).getDni());                   
+                            String[] frase = new String[5];
+                            frase = palabra.split(":");
+                            String codigoUserRecibido = frase[0]; //el codigo recibido tiene que ser el mismo que le hemos asignado
+                            String nombreTabla = frase[1]; //Será el numero de tabla. (ej: 1->empleados 2->users 3-jornada 4-usertipe 5->empresa)
+                            String columna = frase[2]; //sera la palabra que busquemos(ej: juan,1234567D), si ponemos 0 sera todos los de la tabla
+                            String palabraAbuscar = frase[3];// si es el caso será la columna (,dni,nom,etc), si no hay ponemos 0
+                            String orden = frase[4];// si es el caso el orden, si no hay ponemos 0
+                            System.out.println("codigoUserRecibido: "+codigoUserRecibido);
+                            System.out.println("nombreTabla: "+nombreTabla); 
+                            System.out.println("columna: "+columna); 
+                            System.out.println("palabraAbuscar: "+palabraAbuscar); 
+                            System.out.println("orden: "+orden); 
+                            if(nombreTabla.equals("empleados")){
+                                List<Empleado> listaPersonas = new ArrayList<>();
+                                ObjectInputStream perEnt = new ObjectInputStream(socket.getInputStream());
+                                listaPersonas = (ArrayList) perEnt.readObject();;
+                                //recibo objeto
+                                for(int i =0; i< listaPersonas.size();i++){
+                                    System.out.println("Nombre: " + listaPersonas.get(i).getNom() + " Apellidos: " + listaPersonas.get(i).getApellidos() + " DNI: "+listaPersonas.get(i).getDni());                   
 
-                            }                                     
+                                } 
+                                
+                            }else if(nombreTabla.equals("users")){
+                                List<Usuarios> listaPersonas = new ArrayList<>();
+                                ObjectInputStream perEnt = new ObjectInputStream(socket.getInputStream());
+                                listaPersonas = (ArrayList) perEnt.readObject();;
+                                //recibo objeto
+                                for(int i =0; i< listaPersonas.size();i++){
+                                    System.out.println("Nombre: " + listaPersonas.get(i).getLogin() + " Tipo de user: " + listaPersonas.get(i).getNumtipe() + " DNI: "+listaPersonas.get(i).getDni());                   
+
+                                }                                 
+                            }
+                                                               
                         }
                     }  
-                }
-                     
-            }            
-            
-            socket.close();
-
-            
+                }                  
+            }                       
+            socket.close();           
         } catch (UnknownHostException ex) {
             Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {

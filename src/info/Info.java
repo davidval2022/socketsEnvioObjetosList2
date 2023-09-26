@@ -11,7 +11,7 @@ package info;
  *
  * @author david
  */
-public class info {
+public class Info {
     /*
         Este ejercicio funciona bien, es basico de sockets basado en un eac de m09, pero modificado para que en lugar de una traduccion de palabra que son solo texto, me envie 
         una lista de objetos.También esta basada en el programa en el paquete pruebasSocketsServer02.  

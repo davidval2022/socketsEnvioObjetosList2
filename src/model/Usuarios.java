@@ -14,20 +14,21 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 
 
-public class User implements Serializable,Comparable<User>{
+public class Usuarios implements Serializable,Comparable<Usuarios>{
     private String login;
     private String pass;
-    private int numTipe;
+    private int numtipe;
     private String dni;
 
-    public User(String login, String pass, int numTipe, String dni) {
+    public Usuarios(String login, String pass, int numTipe, String dni) {
         this.login = login;
         this.pass = pass;
-        this.numTipe = numTipe;
+        this.numtipe = numTipe;
         this.dni = dni;
     }
+
     
-    public User(){
+    public Usuarios(){
         
     }
 
@@ -47,12 +48,12 @@ public class User implements Serializable,Comparable<User>{
         this.pass = pass;
     }
 
-    public int getNumTipe() {
-        return numTipe;
+    public int getNumtipe() {
+        return numtipe;
     }
 
-    public void setNumTipe(int numTipe) {
-        this.numTipe = numTipe;
+    public void setNumtipe(int numtipe) {
+        this.numtipe = numtipe;
     }
 
     public String getDni() {
@@ -64,7 +65,7 @@ public class User implements Serializable,Comparable<User>{
     }
 
     @Override
-    public int compareTo(User t) {
+    public int compareTo(Usuarios t) {
         String a = new String(String.valueOf(this.getLogin()));
         String b = new String(String.valueOf(t.getLogin()));
         return a.toLowerCase().compareTo(b.toLowerCase());

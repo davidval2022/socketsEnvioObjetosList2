@@ -3,12 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="Spring_Projects">
-            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList/src/socketsenvioobjetoslist/Personal.java</file>
-            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList/src/socketsenvioobjetoslist/Persona.java</file>
-            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList/src/socketsenvioobjetoslist/MainClient.java</file>
-            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList/src/socketsenvioobjetoslist/ThreadClient.java</file>
-            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList/src/socketsenvioobjetoslist/MainServer.java</file>
-            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList/src/socketsenvioobjetoslist/info.java</file>
+            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList2/src/server/MainServer.java</file>
+            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList2/src/model/Usuarios.java</file>
+            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList2/src/server/ThreadClient.java</file>
+            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList2/src/Utilidades/Utilidades.java</file>
+            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList2/src/cliente/MainClient.java</file>
+            <file>file:/home/david/NetBeansProjects/Spring_Projects/socketsEnvioObjetosList2/src/Conexion/Conexion.java</file>
         </group>
     </open-files>
 </project-private>

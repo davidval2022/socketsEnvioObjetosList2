@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  */
 public class Personal {
     List<Empleado> personal = new ArrayList<Empleado>();
-    List<User> vigilantes = new ArrayList<User>();
+    List<Usuarios> vigilantes = new ArrayList<Usuarios>();
 
     public Personal() {
         crearPersonal();
@@ -49,9 +49,9 @@ public class Personal {
         personal.add(juan2);
         personal.add(perico);
         personal.add(andres);
-        //creamos los usuarios de tipo User
-        User userAndres = new User("andres","1234",0,"42345678P");//adminostrador
-        User userJuan = new User("juan","1234",1,"12345678L");//usuario
+        //creamos los usuarios de tipo Usuarios
+        Usuarios userAndres = new Usuarios("andres","1234",0,"42345678P");//adminostrador
+        Usuarios userJuan = new Usuarios("juan","1234",1,"12345678L");//usuario
         vigilantes.add(userAndres);
         vigilantes.add(userJuan);
       
@@ -74,9 +74,9 @@ public class Personal {
         return personal;
     }
   
-  public List<User> buscarUser(String word) {
-       List<User> personas = new ArrayList<User>();
-       User p = new User();
+  public List<Usuarios> buscarUser(String word) {
+       List<Usuarios> personas = new ArrayList<Usuarios>();
+       Usuarios p = new Usuarios();
        for(int i=0; i<vigilantes.size();i++){
            if(word.equalsIgnoreCase(vigilantes.get(i).getLogin())){
                personas.add(vigilantes.get(i));
@@ -86,26 +86,33 @@ public class Personal {
         return personas;
     }
   
-  public String InicioSesion(String login, String pass) {
-      String codigo = "0";
+  public String[] InicioSesion(String login, String pass) {
+      String[] codigosLogin = new String[2];
+      codigosLogin[1] = "-1";
+      String codigo = "-1";
+      String dni = "0";
       int numeroAleatorio = 0;
       //  int valorEntero = (int) (Math.floor(Math.random()*(N-M+1)+M));
        for(int i=0; i<vigilantes.size();i++){
            if(login.equalsIgnoreCase(vigilantes.get(i).getLogin()) && pass.equals(vigilantes.get(i).getPass())){
                numeroAleatorio = (int) (Math.floor(Math.random()*(1-99999+1)+99999));
-               if(vigilantes.get(i).getNumTipe() == 0){
+               if(vigilantes.get(i).getNumtipe() == 0){
                    codigo = "A"+String.valueOf(numeroAleatorio);
-               }else if(vigilantes.get(i).getNumTipe() == 1){
+               }else if(vigilantes.get(i).getNumtipe() == 1){
                    codigo = "U"+String.valueOf(numeroAleatorio);
                }
+               dni = vigilantes.get(i).getDni();
+               codigosLogin[0] = dni;
+               codigosLogin[1] = codigo;
            }       
        }
+       
 
-        return codigo;
+        return codigosLogin;
     }
   
     
-    public List<User> todoUser() {
+    public List<Usuarios> todoUser() {
         return vigilantes;
     }
   
