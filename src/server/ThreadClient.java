@@ -112,7 +112,19 @@ public class ThreadClient extends Thread {
                 user = conexion.comprobarCredencialesBD(login, pass);
                 
                 if(user != null){
-                    codigo = Utilidades.crearCodigoLogin(user.getNumtipe());
+                    if(logins.containsKey(user.getDni())){
+                        msg = "-2";
+                        System.out.println("Ciente desconectado, ya esta conectado ese usuario");
+                        escriptor.write(msg);//enviamos
+                        escriptor.newLine();
+                        escriptor.flush();                    
+                        lector.close();
+                        client.close();
+                        
+                    }else{
+                        codigo = Utilidades.crearCodigoLogin(user.getNumtipe());
+                    }
+                    
                 }
 
                 if(codigo.equalsIgnoreCase("-1")){//si es -1 es un error
@@ -126,14 +138,17 @@ public class ThreadClient extends Thread {
                 }else{        
                     //si no es -1 es que nos ha enviado un codigo
                     //enviamos al cliente el codigo y luego ya vamos con que nos envie que quiere buscar (Empleados)
+                    //comprobamos que el usuario no este ya conectado, para eso miramos el dni
+                    
                     msg = codigo;
   
                     logins.put(user.getDni(), codigo);
                     escriptor.write(msg);//enviamos
                     escriptor.newLine();
                     escriptor.flush();
+                    System.out.println("Users conectados: "+logins);
                     while(!salir){
-                        //leemos la respuesta con la palabra a buscar
+                        //leemos la respuesta con la palabra exit o con el  grupo de codigos para identificar que estamos buscando
                         palabra = lector.readLine(); //recibimos
                         if(palabra.equalsIgnoreCase("exit")){
                             System.out.println("Ciente desconectado");
@@ -142,6 +157,8 @@ public class ThreadClient extends Thread {
                             //outObjeto.close();
                             lector.close();
                             client.close();
+                            logins.remove(user.getDni());//su el usuario sale, se borra el HashMap el dni
+                            System.out.println("Users conectados: "+logins);
 
                         }else{
                             //la idea es que el cliente nos envie un codigo, primero el codigo de conexion, luego el nombre de la tabla ,luego la columna si es necesaria y si no
@@ -242,6 +259,9 @@ public class ThreadClient extends Thread {
             
             
         } catch (IOException ex) {
+           //añado aquí para que cuando salte la excepcion, el usuario vuelva a conectarse, en caso de cerrar por error o algo así.
+            logins.remove(user.getDni());//su el usuario sale, se borra el HashMap el dni
+            System.out.println("Users conectados: "+logins);
             Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }  

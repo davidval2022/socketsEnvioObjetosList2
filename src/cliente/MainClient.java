@@ -66,6 +66,12 @@ public class MainClient {
                     escriptor.close();
                     socket.close();
                     
+                }else if(mensajeServer.equalsIgnoreCase("-2")){
+                     System.out.println("Codigo = -2 .El usuario ya esta conectado");//vemos el código
+                    salir = true;
+                    lector.close();
+                    escriptor.close();
+                    socket.close();                   
                 }else{
                     codigo = mensajeServer;
                     while(!salir){
@@ -92,6 +98,7 @@ public class MainClient {
                             lector.close();
                             escriptor.close();
                             socket.close();
+                            
                         }else{
                             String[] frase = new String[5];
                             frase = palabra.split(":");
@@ -138,31 +145,5 @@ public class MainClient {
         }
     }
     //creo este metodo para formatear la frase y que no esté en una sola linea
-    public static String formatearMensaje(String mensaje) {
-        /*ej de frase:
-        "Català: poma - fruit del tipus pom de la pomera Espanyol: manzana - fruto comestible del manzano ...etc
-        y la idea es que la frase quede así, con uns salto de linea por frase:
-        Català: poma - fruit del tipus pom de la pomera
-        Espanyol: manzana - fruto comestible del manzano
-        ..etc
-        */
-        String m = "";//cadena de retorno
-        String[] cadena = mensaje.split(":");//creo el array con la division
-        String inicioFrase="\n";
-        
-        for(int i=0;i<cadena.length;i++){
-            cadena[i]=cadena[i]+":";//como le hemos quitado antes los : se los volvemos a poner
-            String[] div =cadena[i].split(" "); //ahora dividemos cada divison anterior por espacios           
-            for(int j=0;j<div.length;j++){               
-                if(div[j].endsWith(":")){//si acaba en : es que es el principio de una frase
-                   //System.out.println(inicioFrase);
-                   m = m+inicioFrase+"\n";//añadimos la frase al string de retorno.. esto ha de venir aquí.. justo aquí
-                   inicioFrase = div[j];//es el comienzo de la frase
-                }else{
-                    inicioFrase = inicioFrase+" " +div[j];//al comienzo de la frase le sumamos los siguiente hasta el siguiente comienzo
-                }                              
-            }          
-        }  
-        return m;
-    }
+
 }
