@@ -67,7 +67,7 @@ public class MainClient {
                     socket.close();
                     
                 }else if(mensajeServer.equalsIgnoreCase("-2")){
-                     System.out.println("Codigo = -2 .El usuario ya esta conectado");//vemos el código
+                    System.out.println("Codigo = -2 .El usuario ya esta conectado");//vemos el código
                     salir = true;
                     lector.close();
                     escriptor.close();
@@ -90,16 +90,16 @@ public class MainClient {
                         palabra = lectorPalabra.next();
                         lectorPalabra.nextLine();
                         //ahora escribimos en servidor , enviandole la palabra a buscar 
-                        escriptor.write(palabra);
-                        escriptor.newLine();
-                        escriptor.flush();
-                        if(palabra.equalsIgnoreCase("exit")){ 
+                        if(palabra.equalsIgnoreCase("exit")){ //primero comprobamos si es exit
+                            escriptor.write(palabra);
+                            escriptor.newLine();
+                            escriptor.flush();
                             salir = true;
                             lector.close();
                             escriptor.close();
                             socket.close();
                             
-                        }else{
+                        }else{// y ahora comprobamos que la frase este correcta si no enviamos una establecida (menos el codigo que sera error, es por si fallan las otras palabras)
                             String[] frase = new String[5];
                             frase = palabra.split(":");
                             String codigoUserRecibido = frase[0]; //el codigo recibido tiene que ser el mismo que le hemos asignado
@@ -112,7 +112,32 @@ public class MainClient {
                             System.out.println("columna: "+columna); 
                             System.out.println("palabraAbuscar: "+palabraAbuscar); 
                             System.out.println("orden: "+orden); 
+                            if(codigoUserRecibido.equals("")){
+                                codigoUserRecibido = "0";
+                            }
+                            if(nombreTabla.equals("") || nombreTabla == null){
+                                nombreTabla = "empleados";
+                            }
+                            if(columna.equals("")  || columna == null){
+                                columna = "0";
+                            }
+                            if(palabraAbuscar.equals("")  || palabraAbuscar == null){
+                                palabraAbuscar = "0";
+                            }
+                            if(orden.equals("")  || orden == null){
+                                orden = "0";
+                            } 
+                            //construimos la palabra (frase) correctamente si no lo estaba ya
+                            palabra=codigoUserRecibido+":"+nombreTabla+":"+columna+":"+palabraAbuscar+":"+orden;
+                            
+                            //ahora si enviamos al server los datos que queremos, sin errores
+                            escriptor.write(palabra);
+                            escriptor.newLine();
+                            escriptor.flush();
+                            
+
                             if(nombreTabla.equals("empleados")){
+                                
                                 List<Empleado> listaPersonas = new ArrayList<>();
                                 ObjectInputStream perEnt = new ObjectInputStream(socket.getInputStream());
                                 listaPersonas = (ArrayList) perEnt.readObject();;
@@ -144,6 +169,17 @@ public class MainClient {
             Logger.getLogger(MainClient.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    //creo este metodo para formatear la frase y que no esté en una sola linea
+    
+    public static int contarCaracteres(String cadena, char caracter) {//para contar los :
+        int posicion, contador = 0;
+        //se busca la primera vez que aparece
+        posicion = cadena.indexOf(caracter);
+        while (posicion != -1) { //mientras se encuentre el caracter
+            contador++;           //se cuenta
+            //se sigue buscando a partir de la posición siguiente a la encontrada                                 
+            posicion = cadena.indexOf(caracter, posicion + 1);
+        }
+        return contador;
+    }
 
 }

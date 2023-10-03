@@ -12,6 +12,7 @@ package server;
 //import main.java.ioc.dam.m9.uf3.eac2.b2.*;
 import Conexion.Conexion;
 import Utilidades.Utilidades;
+import cliente.MainClient;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,6 +44,7 @@ public class ThreadClient extends Thread {
     private Scanner in;
     private PrintWriter out;
     private HashMap logins;
+    private String codigo;
     
     
     
@@ -67,7 +70,7 @@ public class ThreadClient extends Thread {
         List<Usuarios> listaUsers = new ArrayList<Usuarios>();
         
         String[] codigosLogin = new String[2];
-        String codigo = "-1";
+        codigo = "-1";
         String dni = "-1";
         Conexion conexion = new Conexion();
         Usuarios user = null;
@@ -120,6 +123,7 @@ public class ThreadClient extends Thread {
                         escriptor.flush();                    
                         lector.close();
                         client.close();
+                        System.out.println(logins);
                         
                     }else{
                         codigo = Utilidades.crearCodigoLogin(user.getNumtipe());
@@ -150,7 +154,7 @@ public class ThreadClient extends Thread {
                     while(!salir){
                         //leemos la respuesta con la palabra exit o con el  grupo de codigos para identificar que estamos buscando
                         palabra = lector.readLine(); //recibimos
-                        if(palabra.equalsIgnoreCase("exit")){
+                        if(palabra.equalsIgnoreCase("exit") || palabra.equals(null)){
                             System.out.println("Ciente desconectado");
                             salir = true;
                             escriptor.close();
@@ -193,6 +197,7 @@ public class ThreadClient extends Thread {
                                 //System.out.println("columna: "+columna); 
                                 //System.out.println("palabraAbuscar: "+palabraAbuscar); 
                                 //System.out.println("orden: "+orden); 
+                                
                                 try {
                                     //en estas 3 de abajos buscamos en empleados
                                     if(nombreTabla.equalsIgnoreCase("empleados") && columna.equalsIgnoreCase("0")){
@@ -231,15 +236,6 @@ public class ThreadClient extends Thread {
                                 
                             }
                                                       
-                            
-                                if(palabra.equalsIgnoreCase("todos")){
-                                        
-                                }else{
-                                    
-                                }
-
-
-
 
                         }
                     }
@@ -247,29 +243,32 @@ public class ThreadClient extends Thread {
                 
                 
                
-            }           
+            }                    
             
-            
-            
-            
-            
-            
-
-            
-            
-            
-        } catch (IOException ex) {
-           //añado aquí para que cuando salte la excepcion, el usuario vuelva a conectarse, en caso de cerrar por error o algo así.
+        }catch(NullPointerException e) {
+            System.out.println("NullPointerException thrown!");
             logins.remove(user.getDni());//su el usuario sale, se borra el HashMap el dni
             System.out.println("Users conectados: "+logins);
+            
+	}catch(ArrayIndexOutOfBoundsException e) {
+            System.out.println("ArrayIndexOutOfBoundsException thrown!");
+            logins.remove(user.getDni());//su el usuario sale, se borra el HashMap el dni
+            System.out.println("Users conectados: "+logins);
+            
+	}catch (IOException ex) {          
             Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+                try {
+                    if (client != null) {
+                        client.close();
+                   }
+               } catch (IOException ioe) {
+                   ioe.printStackTrace();
+               }            
         }
     }  
     
     
-    public void menu(String codigo){
-        
-        
-    }
+
     
 }
